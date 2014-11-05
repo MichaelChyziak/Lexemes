@@ -40,7 +40,7 @@ int main() {
 		getline(sourceFile, lineA);
 
 		//while the current line ends with a line-continuation \ append the next line to the current line
-		while(lineA.length() > 0 && lineA[lineA.length()-1] == '\\')
+		while(lineA.length() > 0 && lineA[lineA.length()-1] == '\\') {
 			lineA.erase(lineA.length()-1, 1);
 			getline(sourceFile, lineB);
 			lineA += lineB;
