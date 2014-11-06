@@ -13,7 +13,67 @@ namespace ensc251{
 
 	//This function returns TRUE if the input is identifier else FALSE
 	bool isIdentifier(const string &lexeme) {
-		string temp = lexeme; //creates a temporary string variable to hold the value of lexeme
+		//http://msdn.microsoft.com/en-us/library/565w213d.aspx	
+		//create an array of possible identifier characters and natural numbers, as well as the arrays sizes
+		const char identifierChars[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+										'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_' };
+		const char naturalNumbers[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		int sizeofIdentifierChars = 53;
+		int sizeOfNaturalNumbers = 10;
+		
+		int offset = 0;
+
+
+		//if the string is a keyword or boolean value, return false (since is not identifier)
+		if (isKeyword(lexeme) || isBooleanValue(lexeme)) {
+			return false;
+		}
+
+		//checks that our string starts with an allowed character (identifierChars), if it is then increase offset by 1
+		if (lexeme.length() > 0) {
+			for (int i = 0; i < sizeofIdentifierChars; i++) {
+				if (lexeme.at(0) == identifierChars[i]) {
+					offset++;
+					break;
+				}
+			}
+		}
+
+		//checks if our string is "__" or "_" + a capital letter since those are reserved for the for C++ implementations
+		//if it is, return false
+		if (lexeme.length() > 1) {
+			if (lexeme.at(0) == '_' && lexeme.at(1) == '_') {
+				return false;
+			}
+			if (lexeme.at(0) == '_') {
+				for (int i = 26; i < (sizeofIdentifierChars - 1); i++) {
+					if (lexeme.at(1) == identifierChars[i]) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		//checks that the other characters past the first are all allowed characters (letters, numbers, and underscores)
+		//if they are then increase offset by 1
+		for (int i = 1; i < lexeme.length(); i++) {
+			for (int j = 0; j < sizeofIdentifierChars; j++) {
+				if (lexeme.at(i) == identifierChars[j]) {
+					offset++;
+					break;
+				}
+			}
+			for (int j = 0; j < sizeOfNaturalNumbers; j++) {
+				if (lexeme.at(i) == naturalNumbers[j]) {
+					offset++;
+					break;
+				}
+			}
+		}
+		//returns true if the offset equals the length of the string
+		if (offset > 0 && offset == lexeme.length()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -99,98 +159,12 @@ namespace ensc251{
 		bool isBinary = false;
 
 		const char naturalNumbers[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		int sizeOfNaturalNumbers = 10;
 		const char hexLetters[] = { 'x', 'X', 'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F' };
-		int sizeOfHexLetters = 14;
 		const char integerSuffix[] = { 'u', 'U', 'l', 'L' };
+
+		int sizeOfNaturalNumbers = 10;
+		int sizeOfHexLetters = 14;
 		int sizeOfIntegerSuffix = 4;
-
-		//checks if the string is 1 character long, if it is and that 1 character is a number from 0-9 then the string is a decimal, turn decimal to true
-		if (temp.length() == 1) {
-			for (int i = 0; i < sizeOfNaturalNumbers; i++) {
-				if (temp.at(0) == naturalNumbers[i]) {
-					isDecimal = true;
-				}
-			}
-		}
-
-		//checks if the strings lenght is greater than one (so we can access the 2nd position of the string, since an integer greater than 1 guarantees 2 as a posibility)
-		if (temp.length() > 1) {
-
-			//checks if the strings 2nd character hints that it is a decimal number (starts with a non-zero number)
-			for (int i = 1; i < sizeOfNaturalNumbers; i++) {
-				if (temp.at(0) == naturalNumbers[i]) {
-					isDecimal = true;
-					break;
-				}
-			}
-
-			//checks if the string starts with zero
-			if (temp.at(0) == naturalNumbers[0]) {
-
-				//checks if the strings 2nd character hints that it is an octal number (2nd char is from 0-7)
-				for (int i = 0; i < (sizeOfNaturalNumbers - 2); i++) {
-					if (temp.at(1) == naturalNumbers[i]) {
-						isOctal = true;
-						break;
-					}
-				}
-
-				//checks if the strings 2nd character hints that it is a hexadecimal number (2nd char is an 'x' or 'X')
-				for (int i = 0; i < (sizeOfHexLetters - 12); i++) {
-					if (temp.at(1) == hexLetters[i]) {
-						isHex = true;
-						break;
-					}
-				}
-
-				//checks if the strings 2nd character hints that it is a binary number (2nd char is a 'b' or 'B')
-				for (int i = 4; i < (sizeOfHexLetters - 8); i++) {
-					if (temp.at(1) == hexLetters[i]) {
-						isBinary = true;
-						break;
-					}
-				}
-			}
-
-			//checks if the strings 2nd character hints that we are at its suffix (2nd char is an 'u', 'U', 'l', or 'L')
-			//if it is, checks if there is another character, if not then return true
-			//if there is still another character, check that that character is also a suffix (string size is at least 3 now)
-			//if there are no more characters than return true, otherwise false
-			if (!isBinary && !isHex && !isOctal && !isDecimal)
-				for (int i = 0; i < sizeOfIntegerSuffix; i++) {
-				if (temp.at(1) == integerSuffix[i]) {
-					if (temp.length() > 2) {
-						for (int j = 0; j < sizeOfIntegerSuffix; j++) {
-							if ((temp.at(2) == integerSuffix[j]) && (temp.length() == 3)) {
-								return true;
-							}
-						}
-					}
-					else {
-						return true;
-					}
-				}
-			}
-		}
-
-		//if the string is hinted to be a decimal make sure all values are a decimal (0-9) until the end of string (excluding suffix)
-		//if it is a decimal value keep isDecimal equal as true, if not make isDecimal equal to false
-		if (isDecimal) {
-			isDecimal = false;
-			int offset = 2;
-			for (; offset < temp.length(); offset++) {
-				for (int j = 0; j < sizeOfNaturalNumbers; j++) {
-					if (temp.at(offset) == naturalNumbers[j]) {
-						break;
-					}
-				}
-			}
-			if (offset == temp.length()) {
-				isDecimal = true;
-			}
-		}
-
 
 		return false;
 	}
