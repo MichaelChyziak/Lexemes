@@ -19,7 +19,8 @@ private:
 	Token *next; //Next pointer for doubly linked list
 	Token *prev; //Previous pointer for doubly linked list
 	string stringRep; //Token value
-    TokenClass stringType; //Token type (to which class this token belongs to, for e.g. identifier, keywords...etc)
+	TokenClass stringType; //Token type (to which class this token belongs to, for e.g. identifier, keywords...etc)
+	bool comment; //true if this token is a comment
 
 	//Allow TokenList class to access Token member variables marked private
 	friend class TokenList;
@@ -31,29 +32,45 @@ public:
 	//Constructor with string initialization, pointers initialized to NULL
 	Token(const string &stringRep) : next(NULL), prev(NULL), stringRep(stringRep) { }
 
-	//Returns the Token's *next member
-	Token* getNext ( ) const { /*Fill in implementation */ }
+	//Returns the Token's *next member 
+	Token* getNext() const {
+		return next;
+	}
 
 	//Sets the Token's *next member
-	void setNext (Token* next ) { /*Fill in implementation */ }
+	void setNext(Token* next) {
+		this->next = next;
+	}
 
-	//Returns the Token's *prev member
-	Token* getPrev ( ) const { /*Fill in implementation */ }
+	//Returns the Token's *prev member 
+	Token* getPrev() const {
+		return prev;
+	}
 
 	//Sets the Token's *prev member
-	void setPrev (Token* prev ){ /*Fill in implementation */ }
+	void setPrev(Token* prev){
+		this->prev = prev;
+	}
 
 	//Returns a reference to the Token's stringRep member variable
-	const string& getStringRep ( ) const { /*Fill in implementation */ }
+	const string& getStringRep() const {
+		return stringRep;
+	}
 
 	//Sets the token's stringRep variable
-	void setStringRep (const string& stringRep ) { /*Fill in implementation */ }
+	void setStringRep(const string& stringRep) {
+		this->stringRep = stringRep;
+	}
 
 	//Returns a reference to the Token's stringType member variable
-	const TokenClass getStringType ( ) const { /*Fill in implementation */ }
+	const TokenClass getStringType() const { 
+		return stringType;
+	}
 
 	//Sets the token's stringType variable
-	void setStringType (const TokenClass& stringType ) { /*Fill in implementation */ }
+	void setStringType(const TokenClass& stringType) {
+		this->stringType = stringType;
+	}
 };
 
 //A doubly-linked list class consisting of Token elements
@@ -67,10 +84,14 @@ public:
 	TokenList() : head(NULL), tail(NULL) { }
 
 	//Returns a pointer to the head of the list
-	Token* getFirst() const { /*Fill in implementation */ }
+	Token* getFirst() const {
+		return head;
+	}
 
 	//Returns a pointer to the tail of the list
-	Token* getLast() const { /*Fill in implementation */ }
+	Token* getLast() const {
+		return tail;
+	}
 
 	//Creates a new token for the string input, str
 	//Appends this new token to the TokenList
@@ -81,7 +102,7 @@ public:
 	//On return from the function, it will be the last token in the list
 	void append(Token *token);
 
-    //Removes the token from the linked list if it is not null
+	//Removes the token from the linked list if it is not null
 	//Deletes the token
 	//On return from function, head, tail and the prev and next Tokens (in relation to the provided token) may be modified.
 	void deleteToken(Token *token);
@@ -96,10 +117,11 @@ public:
 class Tokenizer {
 private:
 	/*State tracking variables for processing a single string*/
-	bool processingInlineComment; //True if processing an In-line comment //
-	bool processingBlockComment;  //True if processing a Block Comment /* */
-	bool processingIncludeStatement; //True if processing an include statement <> ""
+	bool inlineFlag;
 	bool complete; //True if finished processing the current string
+	bool hashFlag; //checks if have read in an a hashtag (for include statement)
+	bool blockFlag; //checks if we are inside a block comment
+	bool includeFlag;
 
 	size_t offset; //Current position in string
 	size_t tokenLength; //Current token length
@@ -116,7 +138,18 @@ private:
 
 public:
 	//Default Constructor- YOU need to add the member variable initializers.
-	Tokenizer() : { /*Add initializers */ }
+	Tokenizer() {
+		//set all of the variables to initial values of false, 0, or Null
+		inlineFlag = false;
+		blockFlag = false;
+		complete = false;
+		hashFlag = false;
+		includeFlag = false;
+
+		offset = 0;
+		tokenLength = 0;
+		str = NULL;
+	}
 
 	//Sets the current string to be tokenized
 	//Resets all Tokenizer state variables
@@ -124,7 +157,9 @@ public:
 	void setString(string *str);
 
 	//Returns true if all possible tokens have been extracted from the current string (string *str)
-	bool isComplete() const { /*Fill in implementation */ }
+	bool isComplete() const {
+		return complete;
+	}
 
 	//Returns the next token. Hint: consider the substr function
 	//Updates the tokenizer state
