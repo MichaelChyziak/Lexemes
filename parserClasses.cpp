@@ -102,13 +102,13 @@ void TokenList::setTokenClass(Token *token) {
 	string tempStr = temp->getStringRep();
 	{
 		using namespace ensc251;
-/*		if (isIdentifier(tempStr)) {
+		if (isIdentifier(tempStr)) {
 			temp->setStringType(T_Identifier);
-		} */
+		} 
 		if (isOperator(tempStr)) {
 			temp->setStringType(T_Operator);
 		}
-/*		else if (tempStr.length() == 1 && isPunctuator(tempStr.at(0))) {
+		else if (tempStr.length() == 1 && isPunctuator(tempStr.at(0))) {
 			temp->setStringType(T_Punctuator);
 		}
 		else if (isKeyword(tempStr)) {
@@ -128,7 +128,7 @@ void TokenList::setTokenClass(Token *token) {
 		}
 		else {
 			temp->setStringType(T_Unknown);
-		}*/
+		}
 	}
 }
 
