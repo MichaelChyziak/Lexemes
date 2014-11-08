@@ -142,6 +142,149 @@ namespace ensc251{
 		int sizeOfNaturalNumbers = 10;
 		int sizeOfHexLetters = 14;
 		int sizeOfIntegerSuffix = 4;
+
+
+
+	
+		
+
+		if( temp.length() > 0)
+		{
+			// normal integercase--------------------------
+			if( temp.length() > 1){
+					int naturalcount = 0;
+		            int suffixcount = 0;
+		            int hexcount = 0;
+				for (int i = 0; i < temp.length(); i++) {
+					for (int j = 0; j < sizeOfNaturalNumbers; j++) {
+						if (temp.at(i) == naturalNumbers[j] ) {
+							naturalcount++;
+						}
+					}
+
+					for (int j = 0; j < sizeOfIntegerSuffix; j++) {
+						if (temp.at(i) ==  integerSuffix[j] ) {
+							suffixcount++;
+						}
+					}
+				}
+
+				if((naturalcount + suffixcount) == temp.length())
+				{
+					isDecimal = true;   
+				}
+
+			}
+
+			// octal integercase------------------------------
+			if( temp.length() > 2 &&  ( temp.at(0) == '0') && (( temp.at(1) == '0'|| temp.at(1) == '1'|| temp.at(1) == '2'|| temp.at(1) =='3'|| temp.at(1) =='4'||temp.at(1) == '5'|| temp.at(1) =='6'||temp.at(1) == '7'|| temp.at(1) =='8'|| temp.at(1) =='9'   ) )  )
+			{
+
+						int naturalcount = 0;
+						int suffixcount = 0;
+						int hexcount = 0;
+				for (int i = 0; i < temp.length(); i++) {
+					for (int j = 0; j < (sizeOfNaturalNumbers-2); j++) {
+						if (temp.at(i) == naturalNumbers[j] ) {
+							naturalcount++;
+						}
+					}
+
+					for (int j = 0; j < sizeOfIntegerSuffix; j++) {
+						if (temp.at(i) ==  integerSuffix[j] ) {
+							suffixcount++;
+						}
+					}
+				}
+
+				if((naturalcount + suffixcount) == temp.length())
+				{
+					isOctal = true;   
+				}
+			}
+
+
+			//Binary integercase---------------------------
+			if( temp.length() > 3 &&  ( temp.at(0) == '0') && ((temp.at(1) == 'b')  || (temp.at(1) == 'B'))){
+
+					int naturalcount = 0;
+					int suffixcount = 0;
+					int hexcount = 0;
+
+
+
+					for (int i = 0; i < temp.length(); i++) {
+					for (int j = 0; j < (sizeOfHexLetters); j++) {
+						if (temp.at(i) == hexLetters[j] ) {
+							hexcount++;
+						}
+					}
+
+					for (int j = 0; j < (sizeOfNaturalNumbers); j++) {
+						if (temp.at(i) == naturalNumbers[j] ) {
+							naturalcount++;
+						}
+					}
+
+					for (int j = 0; j < sizeOfIntegerSuffix; j++) {
+						if (temp.at(i) ==  integerSuffix[j] ) {
+							suffixcount++;
+						}
+					}
+				}
+
+				if((naturalcount + suffixcount+ hexcount) == temp.length())
+				{
+					isBinary  = true;   
+				}
+			}
+
+			//Hex integercase----------------------------
+			if( temp.length() > 3 && ( temp.at(0) == '0') && ((temp.at(1) == 'x')   || (temp.at(1) == 'X'))){
+
+					int naturalcount = 0;
+					int suffixcount = 0;
+					int hexcount = 0;
+
+
+				for (int i = 0; i < temp.length(); i++) {
+					for (int j = 0; j < (sizeOfHexLetters); j++) {
+						if (temp.at(i) == hexLetters[j] ) {
+							hexcount++;
+						}
+					}
+
+					for (int j = 0; j < (sizeOfNaturalNumbers); j++) {
+						if (temp.at(i) == naturalNumbers[j] ) {
+							naturalcount++;
+						}
+					}
+
+					for (int j = 0; j < sizeOfIntegerSuffix; j++) {
+						if (temp.at(i) ==  integerSuffix[j] ) {
+							suffixcount++;
+						}
+					}
+				}
+
+				if((naturalcount + suffixcount+ hexcount) == temp.length())
+				{
+					isHex = true;   
+				}
+			}
+
+
+
+		}
+
+
+
+		if(isHex||isBinary|| isDecimal||isOctal)
+		{ 
+			return true;
+		}
+//this section works but probably could be written more cleanly 
+
 		return false;
 	}
 	//This function returns TRUE if the input is float literal else FALSE
