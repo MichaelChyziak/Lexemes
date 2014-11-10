@@ -20,7 +20,6 @@ private:
 	Token *prev; //Previous pointer for doubly linked list
 	string stringRep; //Token value
 	TokenClass stringType; //Token type (to which class this token belongs to, for e.g. identifier, keywords...etc)
-	bool comment; //true if this token is a comment
 
 	//Allow TokenList class to access Token member variables marked private
 	friend class TokenList;
@@ -63,7 +62,7 @@ public:
 	}
 
 	//Returns a reference to the Token's stringType member variable
-	const TokenClass getStringType() const { 
+	const TokenClass getStringType() const {
 		return stringType;
 	}
 
@@ -79,6 +78,10 @@ private:
 	Token *head; //Points to the head of the token list (doubly linked)
 	Token *tail; //Points to the tail of the function list (doubly linked)
 
+	//Input: a pointer to a token
+	//Output: it won't return anything, but within function, it should set the token class (i.e. token->stringType)
+	//Note: one can invoke this function before adding token to the token list
+	void setTokenClass(Token *token);
 public:
 	//Default Constructor, Empty list with pointers initialized to NULL
 	TokenList() : head(NULL), tail(NULL) { }
@@ -106,11 +109,6 @@ public:
 	//Deletes the token
 	//On return from function, head, tail and the prev and next Tokens (in relation to the provided token) may be modified.
 	void deleteToken(Token *token);
-
-	//Input: a pointer to a token
-	//Output: it won't return anything, but within function, it should set the token class (i.e. token->stringType)
-	//Note: one can invoke this function before adding token to the token list
-	void setTokenClass(Token *token);
 };
 
 //A class for tokenizing a string of C++  code into tokens
