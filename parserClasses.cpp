@@ -93,7 +93,7 @@ void TokenList::deleteToken(Token *token) {
 	}
 }
 
-//Input: a pointer to a token
+//Input: a pointer to a token, which is not null
 //Output: it won't return anything, but within function, it should set the token class (i.e. token->stringType)
 //Note: one can invoke this function before adding token to the token list
 void TokenList::setTokenClass(Token *token) {
@@ -102,32 +102,40 @@ void TokenList::setTokenClass(Token *token) {
 	string tempStr = temp->getStringRep();
 	{
 		using namespace ensc251;
-		if (isIdentifier(tempStr)) {
-			temp->setStringType(T_Identifier);
-		} 
-		if (isOperator(tempStr)) {
-			temp->setStringType(T_Operator);
+		if (temp->getPrev() != NULL && temp->getPrev()->getStringRep() == "//") {
+			temp->setStringType(T_Unknown);
 		}
-		else if (tempStr.length() == 1 && isPunctuator(tempStr.at(0))) {
-			temp->setStringType(T_Punctuator);
-		}
-		else if (isKeyword(tempStr)) {
-			temp->setStringType(T_Keyword);
-		}
-		else if (isBooleanValue(tempStr)) {
-			temp->setStringType(T_Boolean);
-		}
-		else if (isIntegerLiteral(tempStr)) {
-			temp->setStringType(T_IntegerLiteral);
-		}
-		else if (isFloatLiteral(tempStr)) {
-			temp->setStringType(T_FloatLiteral);
-		}
-		else if (isStringLiteral(tempStr)) {
-			temp->setStringType(T_StringLiteral);
+		else if (isCommented) {
+			temp->setStringType(T_Unknown);
 		}
 		else {
-			temp->setStringType(T_Unknown);
+			if (isIdentifier(tempStr)) {
+				temp->setStringType(T_Identifier);
+			}
+			else if (isOperator(tempStr)) {
+				temp->setStringType(T_Operator);
+			}
+			else if (tempStr.length() == 1 && isPunctuator(tempStr.at(0))) {
+				temp->setStringType(T_Punctuator);
+			}
+			else if (isKeyword(tempStr)) {
+				temp->setStringType(T_Keyword);
+			}
+			else if (isBooleanValue(tempStr)) {
+				temp->setStringType(T_Boolean);
+			}
+			else if (isIntegerLiteral(tempStr)) {
+				temp->setStringType(T_IntegerLiteral);
+			}
+			else if (isFloatLiteral(tempStr)) {
+				temp->setStringType(T_FloatLiteral);
+			}
+			else if (isStringLiteral(tempStr)) {
+				temp->setStringType(T_StringLiteral);
+			}
+			else {
+				temp->setStringType(T_Unknown);
+			}
 		}
 	}
 }
@@ -411,6 +419,11 @@ void Tokenizer::prepareNextToken(){
 					if (tokenLength == 0) {
 						tokenLength = 1;
 					}
+					//FIXED CASE FOR "58.". Old case would split up "58" and "." into 2 tokens, but should be 1
+					if ((i > 0) && (str->at(i - 1) == '0' || str->at(i - 1) == '1' || str->at(i - 1) == '2' || str->at(i - 1) == '3' || str->at(i - 1) == '4' || str->at(i - 1) == '5' || str->at(i - 1) == '6' || str->at(i - 1) == '7' || str->at(i - 1) == '8' || str->at(i - 1) == '9')) {
+						i++;
+						break;
+					}
 					if ((i < length - 1) && str->at(i + 1) == '*' && ((i - offset) == 0)) {
 						tokenLength = 2;
 						found = true;
@@ -584,11 +597,13 @@ string Tokenizer::getNextToken() {
 	}
 	if (blockFlag && offset < str->length()) {
 		blockFlag = false;
+		ensc251::isCommented = false;
 		//turn off the block flag if it is on and your offsett is less then the length
 		//this means a */ has been found before the end of the line
 	}
 	if (temp == "/*")
 	{
+		ensc251::isCommented = true;
 		blockFlag = true;
 		//if a block comment gets started activate the processing block comment flag
 		//block line case
@@ -611,6 +626,3 @@ string Tokenizer::getNextToken() {
 
 	return temp;
 }
-
-
-
