@@ -8,13 +8,59 @@ using namespace std;
 //Removes all inline comments from the tokenList including the // marker
 //Returns the number of comments removed
 int removeInlineComments(TokenList &tokenList) {
-	return NULL;
+	int count = 0;
+	Token *t = tokenList.getFirst();
+	while (t) {
+		Token *c1, *c2;
+		if (t->getStringRep() == "//") {
+			c1 = t;
+			c2 = t->getNext();
+			if (c2->getStringRep() != "\n") {
+				t = c2->getNext();
+				tokenList.deleteToken(c2);
+				tokenList.deleteToken(c1);
+				count++;
+			}
+			else {
+				t = c2;
+				tokenList.deleteToken(c1);
+				count++;
+			}
+		}
+		else {
+			t = t->getNext();
+		}
+	}
+	return count;
 }
 
 //Remove all block comments from the tokenList including /* and */ markers
 //Returns the number of block comments removed (where each pair of /* and */ count as one comment)
 int removeBlockComments(TokenList &tokenList) {
-	return NULL;
+	int count = 0;
+	Token *t = tokenList.getFirst();
+	Token *prev;
+	bool deleteNext = false;
+
+	while (t) {
+		if (t->getStringRep() == "/*") {
+			deleteNext = true;
+		}
+
+		prev = t;
+		t = t->getNext();
+
+		if (prev->getStringRep() == "*/") {
+			tokenList.deleteToken(prev);
+			deleteNext = false;
+			count++;
+		}
+
+		if (deleteNext) {
+			tokenList.deleteToken(prev);
+		}
+	}
+	return count;
 }
 
 //Input: a list of tokens
@@ -22,7 +68,7 @@ int removeBlockComments(TokenList &tokenList) {
 //NOTE: Assignment statement must end with a semi-colon
 //@ description: extract all the assignment statements from input token list, prepare a new token list (assignment list)
 //using extracted statements and return the head pointer to it
-Token* getAssignmentStatements(TokenList &tokenList) { 
+Token* getAssignmentStatements(TokenList &tokenList) {
 	return NULL;
 }
 
@@ -60,22 +106,6 @@ int main() {
 		tokens.append("\n");
 	}
 
-	removeInlineComments(tokens);
-	removeBlockComments(tokens);
-
-	/*Test your tokenization of the file by traversing the tokens list and printing out the tokens and the tokens type */
-/*	Token *t = tokens.getFirst();
-	while (t) {
-		cout << t->getStringRep() << " ";
-		t = t->getNext();
-	}
-	t = tokens.getFirst();
-	while (t) {
-		cout << t->getStringType() << " ";
-		t = t->getNext();
-	} */
-
-
 	//MY TEST CASE
 	Token *t = tokens.getFirst();
 	int k = 0;
@@ -85,16 +115,37 @@ int main() {
 		t = t->getNext();
 		k++;
 	}
+	removeInlineComments(tokens);
+	removeBlockComments(tokens);
 
-/*	//Test your assignment statements
+	/*Test your tokenization of the file by traversing the tokens list and printing out the tokens and the tokens type */
+	/*	Token *t = tokens.getFirst();
+	while (t) {
+	cout << t->getStringRep() << " ";
+	t = t->getNext();
+	}
+	t = tokens.getFirst();
+	while (t) {
+	cout << t->getStringType() << " ";
+	t = t->getNext();
+	} */
+
+/*	//MY TEST CASE
+	Token *t = tokens.getFirst();
+	int k = 0;
+	while (t) {
+		cout << "token" << k << ": " << t->getStringRep() << "\n";
+		cout << "token" << k << ": " << t->getStringType() << "\n";
+		t = t->getNext();
+		k++;
+	}*/
+
+	/*	//Test your assignment statements
 	Token *aListPtr = getAssignmentStatements(tokens);
 	while (aListPtr) {
-		cout << aListPtr->getStringRep() << " ";
-		aListPtr = aListPtr->getNext();
+	cout << aListPtr->getStringRep() << " ";
+	aListPtr = aListPtr->getNext();
 	}*/
 
 	return 0;
-} 
-
-
-
+}
