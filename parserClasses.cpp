@@ -34,12 +34,27 @@ void TokenList::append(const string &str) {
 	}
 }
 
-//Appends the token to the TokenList if not null
+//Appends the token to the TokenList
 //Sets the token type
 //On return from the function, it will be the last token in the list
 void TokenList::append(Token *token) {
+	//THIS IS DONE WITHOUT A COMPILER, CHECK THAT IT WORKS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	//append into an empty list
+	if (head == NULL && tail == NULL) {
+		Token * newToken;
+		newToken = token;
+		setTokenClass(newToken);
+		head = newToken;
+		tail = newToken;
+	}
+	
+	
+	
+	
+	
+	
 	//add a token to the bottom of the list when a empty list does not get passed in
-	if (token) {
+	else if (token) {
 		Token * new_tail;
 		new_tail = token;
 		setTokenClass(new_tail); //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SETS THE TOKEN CLASS
