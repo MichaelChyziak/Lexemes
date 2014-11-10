@@ -17,6 +17,9 @@ using namespace std;
 namespace ensc251{
 
 	//tables
+	extern bool isCommented;
+	const char tableOfNaturalNumbers[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
 	const string tableOfOperators[] = { "+", "-", "/", "*", "=", "<", ">", "++", "--", "<<", ">>", "!=", "&", "&&", "|", "||", "[", "]", "==" };
 	const char tableOfPunctuators[] = { ';', ',', '.', '(', ')', '{', '}' };
 	const string tableOfKeywords[] = { "auto", "bool", "break", "case", "char", "const", "continue", "default", "do", "double", "else",
@@ -28,15 +31,15 @@ namespace ensc251{
 
 	//custom data type:
 	enum LexemeType {
-		T_Identifier,
-		T_Operator,
-		T_Punctuator,
-		T_Keyword,
-		T_Boolean,
-		T_IntegerLiteral,
-		T_FloatLiteral,
-		T_StringLiteral,
-		T_Unknown                     //if token does not belong to above classes then place it in this category
+		T_Identifier,//0
+		T_Operator,//1
+		T_Punctuator,//2
+		T_Keyword,//3
+		T_Boolean,//4
+		T_IntegerLiteral,//5
+		T_FloatLiteral,//6
+		T_StringLiteral,//7
+		T_Unknown//8                     //if token does not belong to above classes then place it in this category
 	};
 
 	//helper functions: for all of them
