@@ -34,25 +34,21 @@ void TokenList::append(const string &str) {
 	}
 }
 
-//Appends the token to the TokenList
 //Sets the token type
 //On return from the function, it will be the last token in the list
 void TokenList::append(Token *token) {
-	//THIS IS DONE WITHOUT A COMPILER, CHECK THAT IT WORKS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	//append into an empty list
+	//add token to empty list and have head and tail now point to the new token
 	if (head == NULL && tail == NULL) {
-		Token * newToken;
-		newToken = token;
-		setTokenClass(newToken);
-		head = newToken;
-		tail = newToken;
+		Token * temp;
+		temp = token;
+		setTokenClass(temp); //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~SETS THE TOKEN CLASS
+		temp->setNext(NULL);
+		temp->setPrev(NULL);
+		head = temp;
+		tail = temp;
 	}
-	
-	
-	
-	
-	
-	
+
+
 	//add a token to the bottom of the list when a empty list does not get passed in
 	else if (token) {
 		Token * new_tail;
@@ -64,7 +60,7 @@ void TokenList::append(Token *token) {
 		tail = new_tail;
 	}
 	else {
-		//token is NULL, do nothing
+		//token is invalid, do nothing
 	}
 }
 
@@ -435,7 +431,7 @@ void Tokenizer::prepareNextToken(){
 						tokenLength = 1;
 					}
 					//FIXED CASE FOR "58.". Old case would split up "58" and "." into 2 tokens, but should be 1
-					if ((i > 0) && (str->at(i - 1) == '0' || str->at(i - 1) == '1' || str->at(i - 1) == '2' || str->at(i - 1) == '3' || str->at(i - 1) == '4' || str->at(i - 1) == '5' || str->at(i - 1) == '6' || str->at(i - 1) == '7' || str->at(i - 1) == '8' || str->at(i - 1) == '9')) {
+					if ((i > 0) && (i < length - 1) && (str->at(i + 1) == ' ' || str->at(i + 1) == '\n' || str->at(i + 1) == ';') && (str->at(i - 1) == '0' || str->at(i - 1) == '1' || str->at(i - 1) == '2' || str->at(i - 1) == '3' || str->at(i - 1) == '4' || str->at(i - 1) == '5' || str->at(i - 1) == '6' || str->at(i - 1) == '7' || str->at(i - 1) == '8' || str->at(i - 1) == '9')) {
 						i++;
 						break;
 					}
