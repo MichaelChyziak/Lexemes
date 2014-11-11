@@ -19,7 +19,7 @@ namespace ensc251{
 		//create an array of possible identifier characters and natural numbers, as well as the arrays sizes
 		const char identifierChars[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
 										'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_' };
-		int sizeofIdentifierChars = 53;
+		int sizeOfIdentifierChars = 53;
 		int sizeOfNaturalNumbers = sizeof(tableOfNaturalNumbers) / sizeof(tableOfNaturalNumbers[0]);
 		
 		int offset = 0;
@@ -30,10 +30,25 @@ namespace ensc251{
 			return false;
 		}
 
-		//checks that our string is all filled with an allowed character (identifierChars), if it is then increase offset by 1
-		for (int i = 0; i < lexeme.length(); i++) {
-			for (int j = 0; j < sizeofIdentifierChars; j++) {
+		//Checks that the first characters is an identifier Character and not a number or other character
+		//if its a identifier character, increase offset by 1
+		for (int i = 0; i < sizeOfIdentifierChars; i++) {
+			if (lexeme.at(0) == identifierChars[i]) {
+				offset++;
+				break;
+			}
+		}
+
+		//checks that the rest of our string is all filled with an allowed character (identifierChars), if it is then increase offset by 1
+		for (int i = 1; i < lexeme.length(); i++) {
+			for (int j = 0; j < sizeOfIdentifierChars; j++) {
 				if (lexeme.at(i) == identifierChars[j]) {
+					offset++;
+					break;
+				}
+			}
+			for (int j = 0; j < sizeOfNaturalNumbers; j++) {
+				if (lexeme.at(i) == tableOfNaturalNumbers[j]) {
 					offset++;
 					break;
 				}
@@ -56,7 +71,7 @@ namespace ensc251{
 
 		//compares the temporary string to all of the strings from "tableOfOperators" in "lexemesTypes.h"
 		//returns true if the string matches to one of the strings in the array, false otherwise
-		for (int i = 0; i < temp.length(); i++) {
+		for (int i = 0; i < sizeOfOperators; i++) {
 			if (temp == tableOfOperators[i]) {
 				return true;
 			}
@@ -89,7 +104,7 @@ namespace ensc251{
 
 		//compares the temporary string to all of the strings from "tableOfKeywords" in "lexemesTypes.h"
 		//returns true if the string matches to one of the strings in the array, false otherwise
-		for (int i = 0; i < temp.length(); i++) {
+		for (int i = 0; i < sizeOfKeywords; i++) {
 			if (temp == tableOfKeywords[i]) {
 				return true;
 			}
@@ -105,11 +120,9 @@ namespace ensc251{
 
 		//compares the temporary string to all of the strings from "booleanValues" in "lexemesTypes.h"
 		//returns true if the string matches to one of the strings in the array, false otherwise
-		for (int i = 0; i < temp.length(); i++) {
-			for (int j = 0; j < sizeOfBoolValues; j++) {
-				if (temp == booleanValues[j]) {
-					return true;
-				}
+		for (int i = 0; i < sizeOfBoolValues; i++) {
+			if (temp == booleanValues[i]) {
+				return true;
 			}
 		}
 		return false;
@@ -132,18 +145,21 @@ namespace ensc251{
 			for (int j = 0; j < sizeOfNaturalNumbers; j++) {
 				if (temp.at(i) == tableOfNaturalNumbers[j]) {
 					offset++;
+					break;
 				}
 			}
 			if (temp.at(0) == '0') {
 				for (int j = 0; j < sizeOfHexLetters; j++) {
 					if (temp.at(i) == hexLetters[j]) {
 						offset++;
+						break;
 					}
 				}
 			}
 			for (int j = 0; j < sizeOfIntegerSuffix; j++) {
 				if (temp.at(i) == integerSuffix[j]) {
 					offset++;
+					break;
 				}
 			}
 		}
@@ -169,11 +185,13 @@ namespace ensc251{
 			for (int j = 0; j < sizeOfNaturalNumbers; j++) {
 				if (temp.at(i) == tableOfNaturalNumbers[j]) {
 					offset++;
+					break;
 				}
 			}
 			for (int j = 0; j < floatingPointCharactersSize; j++) {
 				if (temp.at(i) == floatingPointCharacters[j]) {
 					offset++;
+					break;
 				}
 			}
 		}
@@ -190,7 +208,7 @@ namespace ensc251{
 		string temp = lexeme; //creates a temporary string variable to hold the value of lexeme
 		//http://msdn.microsoft.com/en-us/library/69ze775t.aspx <- this lists the different types of string literals
 		if (temp.length() > 1){
-			if (temp.at(0) == '"' && temp.at(1) == '"'){
+			if (temp.at(0) == '"' && temp.at(temp.length() - 1) == '"'){
 				return true;
 			}
 		}
