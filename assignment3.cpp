@@ -64,12 +64,43 @@ int removeBlockComments(TokenList &tokenList) {
 }
 
 //Input: a list of tokens
-//Output: head pointer to the list of assignment statements
+//Output: head pointer to the list of assignment statements, returns NULL if there are no assignment statements
 //NOTE: Assignment statement must end with a semi-colon
 //@ description: extract all the assignment statements from input token list, prepare a new token list (assignment list)
 //using extracted statements and return the head pointer to it
 Token* getAssignmentStatements(TokenList &tokenList) {
-	return NULL;
+	Token *t = tokenList.getFirst(); //current position in our token of the passed in token list
+	TokenList *assignmentList;
+	assignmentList = new TokenList;
+	Token * temp = new Token; //temporary position of tokens
+	Token* token = new Token; //temporary token to put into the assignmentList
+	string tokenString = "";
+	{
+		using namespace ensc251;
+		while (t) {
+			if (t->getStringRep() == "=") { //have to add more cases, but test simple case first
+				temp = t;
+				while (temp->getPrev() != NULL && temp->getPrev()->getStringType() != T_Identifier) {
+					temp = temp->getPrev();
+				}
+				if (temp->getPrev() != NULL) {
+					temp = temp->getPrev();
+				}
+				tokenString += temp->getStringRep();
+				while (temp->getStringRep() != ";") {
+					temp = temp->getNext();
+					tokenString += temp->getStringRep();
+				}
+				token->setStringRep(tokenString);
+				assignmentList->append(token);
+				t = t->getNext();
+			}
+			else {
+				t = t->getNext();
+			}
+		}
+	}
+	return assignmentList->getFirst();
 }
 
 //Example Test code for interacting with your Token, TokenList, and Tokenizer classes
@@ -103,7 +134,7 @@ int main() {
 			tokens.append(tokenizer.getNextToken());
 		}
 		//Re-insert newline that was removed by the getline function
-		tokens.append("\n");
+//		tokens.append("\n");
 	}
 
 	//MY TEST CASE
@@ -114,10 +145,22 @@ int main() {
 		cout << "token" << k << ": " << t->getStringType() << "\n";
 		t = t->getNext();
 		k++;
+	}/**/
+
+
+
+/*	Token *assignmentStuff = getAssignmentStatements(tokens);
+	int k = 0;
+	while (assignmentStuff) {
+		cout << assignmentStuff->getStringRep();
+		assignmentStuff = assignmentStuff->getNext();
 	}
 	removeInlineComments(tokens);
 	removeBlockComments(tokens);
 
+
+
+	*/
 	/*Test your tokenization of the file by traversing the tokens list and printing out the tokens and the tokens type */
 	/*	Token *t = tokens.getFirst();
 	while (t) {
@@ -138,7 +181,7 @@ int main() {
 		cout << "token" << k << ": " << t->getStringType() << "\n";
 		t = t->getNext();
 		k++;
-	}*/
+	}/**/
 
 	/*	//Test your assignment statements
 	Token *aListPtr = getAssignmentStatements(tokens);
