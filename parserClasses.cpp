@@ -257,6 +257,14 @@ void Tokenizer::prepareNextToken(){
 					}
 					break;
 					//includes cases where I find { !, != }
+									case '\'':
+					while (i < length - 1 && !(str->at(i) != '\\' && str->at(i + 1) == '\'')) {
+						i++;
+					}
+					tokenLength = i + 2 - offset;
+					found = true;
+					break;
+					//includes cases where I find { 'x' where x is any viable character)
 				case '"':
 					while (i < length - 1 && !(str->at(i) != '\\' && str->at(i + 1) == '"')) {
 						i++;
