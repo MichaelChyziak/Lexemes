@@ -463,6 +463,10 @@ void Tokenizer::prepareNextToken(){
 								break;
 							}
 						}
+						if ((i == length - 1) || ((i < length - 1) && (str->at(i + 1) == ' ' || str->at(i + 1) == '\n' || str->at(i + 1) == ';'))) {
+							i++;
+							break;
+						}
 					}
 					found = true;
 					break;
